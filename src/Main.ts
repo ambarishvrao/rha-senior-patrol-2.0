@@ -326,7 +326,7 @@ function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spre
         //set city side request acceptance date if not set already
         let cityRequestAcceptanceDateRangeString = SheetUtils.buildRange(Constants.requestCityAcceptanceDateColumn, rowNumber, Constants.requestCityAcceptanceDateColumn, rowNumber);
         let targetRange: GoogleAppsScript.Spreadsheet.Range = requestsSheet.getRange(cityRequestAcceptanceDateRangeString);
-        if (Utils.isNull(targetRange.getValue())) {
+        if (targetRange.getValue() === "") {
             targetRange.setValue(new Date());
         }
     }
