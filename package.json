@@ -1,0 +1,7 @@
+{
+    "requires": true,
+    "lockfileVersion": 1,
+    "dependencies": {
+        "@types/google-apps-script": "^1.0.26"
+    }
+}
