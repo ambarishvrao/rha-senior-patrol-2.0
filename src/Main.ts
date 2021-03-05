@@ -127,7 +127,7 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
         let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
         let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
 
-        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getSendToCityIndex());
+        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getRequestFinalStatusColumn());
         console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
         console.log("currentCityRequests= " + filteredCurrentCityRequests);
         if (filteredCurrentCityRequests.length > 0) {
