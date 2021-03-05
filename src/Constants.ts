@@ -57,7 +57,7 @@ export class Constants {
     public static emailRequestIdColumn: string = "A";
     public static emailRequestorNameColumn: string = "B";
     public static emailRequestorEmailColumn: string = "C";
-    public static emailInitialCheckColumn: string = "C";
+    public static emailInitialCheckColumn: string = "D";
     public static emailRequestCityStatusColumn: string = "E";
     public static emailSentStatusColumn: string = "F";
 
