@@ -130,9 +130,12 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
         let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, "B");
         
         //get last row + 1 range, and add requests which are accepted, and not sent, set status as "Pending" in city sheet
-        let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + currentCityRequests.length - 1;
-        let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
+        
         let filteredCurrentCityRequests: string[][] = filterCityRequestsForAcceptedAndPending(currentCityRequests, Constants.getInitialCheckIndex(), Constants.initialCheckAcceptedString);
+
+        let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
+        let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
+
         let filteredCurrentCityFailedRequests: string[][] = filterInputArrayWithNoMatch(currentCityRequests, Constants.getInitialCheckIndex(), Constants.initialCheckAcceptedString);
         console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
         console.log("currentCityRequests= " + filteredCurrentCityRequests);
