@@ -44,4 +44,8 @@ export class Templates {
      
     Regards,
     Robin Hood Army`;
+
+    public static cityRequestNotification: string = `Hi,
+    You have received RHA Senior Patrol 2.0 request(s). Please check the google sheet sent to your city accordingly and 
+    `
 }

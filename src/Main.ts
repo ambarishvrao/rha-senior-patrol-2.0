@@ -69,8 +69,8 @@ function syncRequestsToCitiesPeriodically(forceSync: boolean): void {
                 });
             }
         }
-        //set last synced id!
-        actionSheet.getRange(Constants.lastSyncedIdForMasterToCityAddress).setValue(maxSyncedIdInCurrentSyncOperation);
+        //set last synced id! -> NOT USED ANYMORE!
+        //actionSheet.getRange(Constants.lastSyncedIdForMasterToCityAddress).setValue(maxSyncedIdInCurrentSyncOperation);
     }
     console.log("periodic sync complete at " + new Date().toISOString() + " with last synced id= " + maxSyncedIdInCurrentSyncOperation);
 }
@@ -223,7 +223,7 @@ function addRequestToEmailsTab(emailsSheet: GoogleAppsScript.Spreadsheet.Sheet, 
     let idToReturn = Number.parseInt(currentCityRequest[0]);
     let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(emailsSheet, "B");
     let rowNumberToAddCurrentRequest = lastRowInSheet + 1;
-    let requestEmailData: string[] = [currentCityRequest[0], currentCityRequest[Constants.getRequestorEmailAddressIndex()], currentCityRequest[Constants.getInitialCheckIndex()], currentCityRequest[Constants.getRequestCityStatusColumn()]];
+    let requestEmailData: string[] = [currentCityRequest[0], currentCityRequest[Constants.getRequestorNameIndex()],currentCityRequest[Constants.getRequestorEmailAddressIndex()], currentCityRequest[Constants.getInitialCheckIndex()], currentCityRequest[Constants.getRequestCityStatusColumn()]];
     let valuesToSetToSheet: string[][] = [];
     valuesToSetToSheet.push(requestEmailData);
     let cityResponseRangeString: string = SheetUtils.buildRange(Constants.emailRequestIdColumn, rowNumberToAddCurrentRequest, Constants.emailRequestCityStatusColumn, rowNumberToAddCurrentRequest);
@@ -299,7 +299,7 @@ function syncRequestStatusesFromCitiesPeriodically(): void {
 
         currentCityRequestStatuses.forEach((cityResponseHolder: CityResponseHolder, requestId: number) => {
             //figure out which row has the current requestId
-            let rowNumber = getRowNumberInMasterSheet(requestId);
+            let rowNumber = RequestUtils.getRowNumberInMasterSheet(requestId);
             //build range
             let cityRequestStatusRangeString = SheetUtils.buildRange(Constants.requestCityStatusColumn, rowNumber, Constants.requestCityStatusColumn, rowNumber);
             let cityRequestContactedRangeString = SheetUtils.buildRange(Constants.requestCityContactedColumn, rowNumber, Constants.requestCityContactedColumn, rowNumber);
@@ -327,10 +327,6 @@ function figureOutRowNumberForGivenRequestId(requestIds: string[][], requestIdTo
         }
     }
     return outputIndex;
-}
-
-function getRowNumberInMasterSheet(requestId: number): number {
-    return requestId + 1;
 }
 
 function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spreadsheet.Sheet, rowNumber: number, existingStatus: string, updatedStatus: string, emailsSheet: GoogleAppsScript.Spreadsheet.Sheet): void {

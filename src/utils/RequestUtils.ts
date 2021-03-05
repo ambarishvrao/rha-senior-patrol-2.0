@@ -35,4 +35,8 @@ export class RequestUtils {
         }
         return false;
     }
+
+    public static getRowNumberInMasterSheet(requestId: number): number {
+        return requestId + 1;
+    }
 }
