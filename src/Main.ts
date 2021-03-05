@@ -27,7 +27,7 @@ function syncRequestsToCitiesPeriodically(forceSync: boolean): void {
     }
     let startRow: number = 2;
     let lastSyncedId: number = 0;
-    if (!forceSync) {
+    /*if (!forceSync) {
         let lastSyncedIdString: string = actionSheet.getRange(Constants.lastSyncedIdForMasterToCityAddress).getValue();
         if (StringUtils.isEmpty(lastSyncedIdString)) {
             lastSyncedIdString = "0"
@@ -38,7 +38,7 @@ function syncRequestsToCitiesPeriodically(forceSync: boolean): void {
         } else {
             startRow = lastSyncedId + 2;
         }
-    }
+    }*/
     let requestEndRow: number = SheetUtils.getLastNonEmptyRowForColumn(requestsSheet, "B");
     if (startRow > requestEndRow) {
         return;
@@ -120,7 +120,15 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
             failedCitySetOfRequestsMap.set(currentCity, currentCityRequests);
             return;
         }
+
+        //updated logic?
+        //get ids already present in city sheet
+        //if current id is not present in above array, then we add to the end
+        //if current id is present in above array, we do nothing
+
+        // this will not work! need to change logic to force push all requests!
         let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, "B");
+        
         //get last row + 1 range, and add requests which are accepted, and not sent, set status as "Pending" in city sheet
         let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + currentCityRequests.length - 1;
         let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
