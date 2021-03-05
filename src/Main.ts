@@ -126,7 +126,7 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
         let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
         let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
 
-        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex());
+        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getSendToCityIndex());
         console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
         console.log("currentCityRequests= " + filteredCurrentCityRequests);
         if (filteredCurrentCityRequests.length > 0) {
@@ -176,10 +176,10 @@ function filterCityRequestsForAcceptedAndPending(inputArray: string[][], firstIn
     return outputArray;
 }
 
-function filterInitialCheckFailedRequests(inputArray: string[][], index: number): string[][] {
+function filterInitialCheckFailedRequests(inputArray: string[][], index: number, requestSentToCityIndex): string[][] {
     let outputArray: string[][] = [];
     for (let i: number = 0; i < inputArray.length; i++) {
-        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "") {
+        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "" && inputArray[i][requestSentToCityIndex] !== CityRequestStatus.notApplicable) {
             outputArray.push(inputArray[i]);
         }
     }
