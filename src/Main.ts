@@ -7,6 +7,7 @@ import { CityStatusUpdateHolder } from "./models/CityStatusUpdateHolder";
 import { StringUtils } from "./utils/StringUtils";
 import { RequestUtils } from "./utils/RequestUtils";
 import { CityResponseHolder } from "./models/CityResponseHolder";
+import { FinalStatus } from "./models/FinalStatus";
 
 function syncRequestsToCities(): void {
     console.log("syncRequestsToCities= " + new Date().toISOString());
@@ -32,7 +33,7 @@ function syncRequestsToCitiesPeriodically(forceSync: boolean): void {
     if (startRow > requestEndRow) {
         return;
     }
-    let requestData: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestStartCellColumn, startRow, Constants.requestSentToCityColumn, requestEndRow)).getValues();
+    let requestData: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestStartCellColumn, startRow, Constants.requestFinalStatusColumn, requestEndRow)).getValues();
     let maxSyncedIdInCurrentSyncOperation: number = lastSyncedId;
     if (requestData.length > 0) {
         let citySetOfRequestsMap: Map<string, string[][]>;
@@ -176,10 +177,10 @@ function filterCityRequestsForAcceptedAndPending(inputArray: string[][], firstIn
     return outputArray;
 }
 
-function filterInitialCheckFailedRequests(inputArray: string[][], index: number, requestSentToCityIndex): string[][] {
+function filterInitialCheckFailedRequests(inputArray: string[][], index: number, finalStatusIndex): string[][] {
     let outputArray: string[][] = [];
     for (let i: number = 0; i < inputArray.length; i++) {
-        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "" && inputArray[i][requestSentToCityIndex] !== CityRequestStatus.notApplicable) {
+        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "" && inputArray[i][finalStatusIndex] !== FinalStatus.closed) {
             outputArray.push(inputArray[i]);
         }
     }
