@@ -30,10 +30,13 @@ function sendEmailsPeriodically(): void {
             //send mail
             sendEmail(subject, toEmailAddress, messageBody);
             //set final status and request closure date
-            let currentRowNumber: number = i + 1;
-            let emailSentStatusRangeString: string = SheetUtils.buildRange(Constants.requestClosureDateColumn, currentRowNumber, Constants.requestClosureDateColumn, currentRowNumber);
+            let currentRowNumber: number = i + 2;
+            let emailSentStatusRangeString: string = SheetUtils.buildRange(Constants.emailSentStatusColumn, currentRowNumber, Constants.emailSentStatusColumn, currentRowNumber);
             console.log("emailSentStatusRangeString= " + emailSentStatusRangeString);
             emailSheet.getRange(emailSentStatusRangeString).setValue("Yes");
+            let emailSentDateRangeString: string = SheetUtils.buildRange(Constants.emailSentStatusColumn, currentRowNumber, Constants.emailSentStatusColumn, currentRowNumber);
+            console.log("emailSentStatusRangeString= " + emailSentDateRangeString);
+            emailSheet.getRange(emailSentDateRangeString).setValue(new Date());
             let rowNumberInMasterSheet = RequestUtils.getRowNumberInMasterSheet(Number.parseInt(requestId));
             let requestClosureDateRangeString: string = SheetUtils.buildRange(Constants.requestClosureDateColumn, rowNumberInMasterSheet, Constants.requestClosureDateColumn, rowNumberInMasterSheet);
             console.log("requestClosureDateRangeString= " + requestClosureDateRangeString);

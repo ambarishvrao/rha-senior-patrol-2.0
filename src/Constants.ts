@@ -60,6 +60,7 @@ export class Constants {
     public static emailInitialCheckColumn: string = "D";
     public static emailRequestCityStatusColumn: string = "E";
     public static emailSentStatusColumn: string = "F";
+    public static emailSentDateColumn: string = "G";
 
     public static cityBirdsEyeViewSheetId: string = "1R04ZVH3go57NcNuLnfO0YDWaYlkTjAnpzEToD1cIKbU";
     public static cityBirdsEyeViewTabName: string = "Consolidated Data";
