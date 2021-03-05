@@ -13,9 +13,11 @@ export class Constants {
 
     public static requestSheetTabName: string = "requests";
     public static requestSheetActionTabName: string = "actions";
+    public static requestSheetEmailsTabName: string = "emails";
     public static requestStartCellColumn:string = "A";
     public static requestTimestampColumn:string = "B";
     public static requestStartCellRow:number = 2;
+    public static requestorEmailAddressColumn:string = "G";
     public static requestCityColumn:string = "K";
     public static requestEndCellColumn:string = "P";
     public static requestInitialCheckColumn:string = "Q";
@@ -47,12 +49,20 @@ export class Constants {
     public static citySheetRequestContactedColumn: string = "R";
     public static citySheetEndCellColumn: string = Constants.requestEndCellColumn;
 
+
+    public static emailRequestIdColumn: string = "A";
+    public static emailRequestCityStatusColumn: string = "D";
+
     public static cityBirdsEyeViewSheetId: string = "1R04ZVH3go57NcNuLnfO0YDWaYlkTjAnpzEToD1cIKbU";
     public static cityBirdsEyeViewTabName: string = "Consolidated Data";
     public static cityBirdsEyeViewRange: string = "A3:C300";
 
     public static getCityIndex():number{
         return SheetUtils.getIndexFromAlphabet(Constants.requestCityColumn);
+    }
+
+    public static getRequestorEmailAddressIndex():number{
+        return SheetUtils.getIndexFromAlphabet(Constants.requestorEmailAddressColumn);
     }
 
     public static getInitialCheckIndex():number{
@@ -77,5 +87,8 @@ export class Constants {
 
     public static getCitySheetMasterSheetUrlColumn():number{
         return SheetUtils.getIndexFromAlphabet(Constants.citySheetMasterSheetUrlColumn);
+    }
+    public static getRequestSheetRequestIdColumn():number{
+        return SheetUtils.getIndexFromAlphabet(Constants.requestStartCellColumn);
     }
 }

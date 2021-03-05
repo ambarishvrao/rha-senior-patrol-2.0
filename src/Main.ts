@@ -22,23 +22,12 @@ function syncRequestStatusesFromCities(): void {
 function syncRequestsToCitiesPeriodically(forceSync: boolean): void {
     let actionSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetActionTabName);
     let requestsSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetTabName);
+    let emailsSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetEmailsTabName);
     if (Utils.isNull(actionSheet)) {
         return;
     }
     let startRow: number = 2;
     let lastSyncedId: number = 0;
-    /*if (!forceSync) {
-        let lastSyncedIdString: string = actionSheet.getRange(Constants.lastSyncedIdForMasterToCityAddress).getValue();
-        if (StringUtils.isEmpty(lastSyncedIdString)) {
-            lastSyncedIdString = "0"
-        }
-        lastSyncedId = Number.parseInt(lastSyncedIdString);
-        if (lastSyncedId <= 0) {
-            startRow = 2;
-        } else {
-            startRow = lastSyncedId + 2;
-        }
-    }*/
     let requestEndRow: number = SheetUtils.getLastNonEmptyRowForColumn(requestsSheet, "B");
     if (startRow > requestEndRow) {
         return;
@@ -71,6 +60,7 @@ function syncRequestsToCitiesPeriodically(forceSync: boolean): void {
                         for (let i: number = 0; i < currentCityRequests.length; i++) {
                             let syncedId = setRequestSentToCityInMasterSheet(requestsSheet, currentCityRequests[i], false);
                             syncedId = setRequestCityResponse(requestsSheet, currentCityRequests[i], CityRequestStatus.notApplicable);
+                            addRequestToEmailsTab(emailsSheet, currentCityRequests[i]);
                             if (syncedId > maxSyncedIdInCurrentSyncOperation) {
                                 maxSyncedIdInCurrentSyncOperation = syncedId;
                             }
@@ -128,15 +118,15 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
 
         // this will not work! need to change logic to force push all requests!
         let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, "B");
-        
+
         //get last row + 1 range, and add requests which are accepted, and not sent, set status as "Pending" in city sheet
-        
+
         let filteredCurrentCityRequests: string[][] = filterCityRequestsForAcceptedAndPending(currentCityRequests, Constants.getInitialCheckIndex(), Constants.initialCheckAcceptedString);
 
         let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
         let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
 
-        let filteredCurrentCityFailedRequests: string[][] = filterInputArrayWithNoMatch(currentCityRequests, Constants.getInitialCheckIndex(), Constants.initialCheckAcceptedString);
+        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex());
         console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
         console.log("currentCityRequests= " + filteredCurrentCityRequests);
         if (filteredCurrentCityRequests.length > 0) {
@@ -186,15 +176,16 @@ function filterCityRequestsForAcceptedAndPending(inputArray: string[][], firstIn
     return outputArray;
 }
 
-function filterInputArrayWithNoMatch(inputArray: string[][], index: number, stringToMatch): string[][] {
+function filterInitialCheckFailedRequests(inputArray: string[][], index: number): string[][] {
     let outputArray: string[][] = [];
     for (let i: number = 0; i < inputArray.length; i++) {
-        if (inputArray[i][index] !== stringToMatch && inputArray[i][index] !== "") {
+        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "") {
             outputArray.push(inputArray[i]);
         }
     }
     return outputArray;
 }
+
 function setRequestSentToCityInMasterSheet(requestsSheet: GoogleAppsScript.Spreadsheet.Sheet, currentCityRequest: string[], isSuccess: boolean): number {
     if (Utils.isNull(currentCityRequest)) {
         return 0;
@@ -202,7 +193,7 @@ function setRequestSentToCityInMasterSheet(requestsSheet: GoogleAppsScript.Sprea
     let idToReturn = Number.parseInt(currentCityRequest[0]);
     let rowNumberForId: number = idToReturn + 1;
     let sentToCityRangeString: string = SheetUtils.buildRange(Constants.requestSentToCityColumn, rowNumberForId, Constants.requestSentToCityColumn, rowNumberForId);
-    let valueToBeSet="";
+    let valueToBeSet = "";
     if (isSuccess) {
         valueToBeSet = Constants.sentToCityValue;
     } else {
@@ -213,7 +204,7 @@ function setRequestSentToCityInMasterSheet(requestsSheet: GoogleAppsScript.Sprea
     return idToReturn;
 }
 
-function setRequestCityResponse(requestsSheet: GoogleAppsScript.Spreadsheet.Sheet, currentCityRequest: string[], status: string):number{
+function setRequestCityResponse(requestsSheet: GoogleAppsScript.Spreadsheet.Sheet, currentCityRequest: string[], status: string): number {
     if (Utils.isNull(currentCityRequest)) {
         return 0;
     }
@@ -224,10 +215,28 @@ function setRequestCityResponse(requestsSheet: GoogleAppsScript.Spreadsheet.Shee
     requestsSheet.getRange(cityResponseRangeString).setValue(status);
     return idToReturn;
 }
+
+function addRequestToEmailsTab(emailsSheet: GoogleAppsScript.Spreadsheet.Sheet, currentCityRequest: string[]): number {
+    if (Utils.isNull(currentCityRequest)) {
+        return 0;
+    }
+    let idToReturn = Number.parseInt(currentCityRequest[0]);
+    let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(emailsSheet, "B");
+    let rowNumberToAddCurrentRequest = lastRowInSheet + 1;
+    let requestEmailData: string[] = [currentCityRequest[0], currentCityRequest[Constants.getRequestorEmailAddressIndex()], currentCityRequest[Constants.getInitialCheckIndex()], currentCityRequest[Constants.getRequestCityStatusColumn()]];
+    let valuesToSetToSheet: string[][] = [];
+    valuesToSetToSheet.push(requestEmailData);
+    let cityResponseRangeString: string = SheetUtils.buildRange(Constants.emailRequestIdColumn, rowNumberToAddCurrentRequest, Constants.emailRequestCityStatusColumn, rowNumberToAddCurrentRequest);
+    console.log("sentToCityRangeString= " + cityResponseRangeString + " valueToBeSet= " + valuesToSetToSheet);
+    emailsSheet.getRange(cityResponseRangeString).setValues(valuesToSetToSheet);
+    return idToReturn;
+}
+
 //let us keep this every hour at 20 minute mark?
 function syncRequestStatusesFromCitiesPeriodically(): void {
     //get last requestId in the "requests" sheet
     let requestsSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetTabName);
+    let emailSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetEmailsTabName);
     let lastRowNumber: number = SheetUtils.getLastNonEmptyRowForColumn(requestsSheet, Constants.requestTimestampColumn);
     //form vertical arrays for requestId, sentToCity, cityResponse
     let requestIds: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestStartCellColumn, Constants.requestStartCellRow, Constants.requestStartCellColumn, lastRowNumber)).getValues();
@@ -296,14 +305,14 @@ function syncRequestStatusesFromCitiesPeriodically(): void {
             let cityRequestContactedRangeString = SheetUtils.buildRange(Constants.requestCityContactedColumn, rowNumber, Constants.requestCityContactedColumn, rowNumber);
 
             let existingStatus: string = requestsSheet.getRange(cityRequestStatusRangeString).getValue();
-            
+
             requestsSheet.getRange(cityRequestContactedRangeString).setValue(cityResponseHolder.wasContacted);
-            
+
             if (existingStatus !== cityResponseHolder.cityResponse) {
                 console.log("UPDATED! requestId= " + requestId + " updatedStatus= " + cityResponseHolder.cityResponse);
                 requestsSheet.getRange(cityRequestStatusRangeString).setValue(cityResponseHolder.cityResponse);
-                captureDateBasedOnStatusTransition(requestsSheet, rowNumber, existingStatus, cityResponseHolder.cityResponse);
-            }else{
+                captureDateBasedOnStatusTransition(requestsSheet, rowNumber, existingStatus, cityResponseHolder.cityResponse, emailSheet);
+            } else {
                 console.log("SAME STATUS! requestId= " + requestId + " updatedStatus= " + cityResponseHolder.cityResponse);
             }
         });
@@ -324,7 +333,7 @@ function getRowNumberInMasterSheet(requestId: number): number {
     return requestId + 1;
 }
 
-function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spreadsheet.Sheet, rowNumber: number, existingStatus: string, updatedStatus: string): void {
+function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spreadsheet.Sheet, rowNumber: number, existingStatus: string, updatedStatus: string, emailsSheet: GoogleAppsScript.Spreadsheet.Sheet): void {
     if (updatedStatus === existingStatus) {
         return;
     }
@@ -332,6 +341,14 @@ function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spre
         //set city side request closure date
         let cityRequestClosureDateRangeString = SheetUtils.buildRange(Constants.requestCityClosureDateColumn, rowNumber, Constants.requestCityClosureDateColumn, rowNumber);
         requestsSheet.getRange(cityRequestClosureDateRangeString).setValue(new Date());
+        let entireRequest: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestStartCellColumn, rowNumber, Constants.requestEndCellColumn, rowNumber)).getValue();
+        let currentCityRequests: string[] = [
+            entireRequest[0][Constants.getRequestSheetRequestIdColumn()],
+            entireRequest[0][Constants.getRequestorEmailAddressIndex()],
+            entireRequest[0][Constants.getInitialCheckIndex()],
+            entireRequest[0][Constants.getRequestCityStatusColumn()]
+        ];
+        addRequestToEmailsTab(emailsSheet, currentCityRequests);
     }
     if (updatedStatus != "" && RequestUtils.isOpen(updatedStatus)) {
         //set city side request acceptance date if not set already
