@@ -341,13 +341,7 @@ function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spre
         //set city side request closure date
         let cityRequestClosureDateRangeString = SheetUtils.buildRange(Constants.requestCityClosureDateColumn, rowNumber, Constants.requestCityClosureDateColumn, rowNumber);
         requestsSheet.getRange(cityRequestClosureDateRangeString).setValue(new Date());
-        let entireRequest: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestStartCellColumn, rowNumber, Constants.requestEndCellColumn, rowNumber)).getValues();
-        let currentCityRequests: string[] = [
-            entireRequest[0][Constants.getRequestSheetRequestIdColumn()],
-            entireRequest[0][Constants.getRequestorEmailAddressIndex()],
-            entireRequest[0][Constants.getInitialCheckIndex()],
-            entireRequest[0][Constants.getRequestCityStatusColumn()]
-        ];
+        let entireRequest: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestStartCellColumn, rowNumber, Constants.requestCityClosureDateColumn, rowNumber)).getValues();
         addRequestToEmailsTab(emailsSheet, entireRequest[0]);
     }
     if (updatedStatus != "" && RequestUtils.isOpen(updatedStatus)) {
