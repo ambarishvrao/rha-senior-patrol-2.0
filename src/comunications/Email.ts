@@ -19,7 +19,7 @@ function sendEmailsPeriodically(): void {
 
     for (let i: number = 0; i < emailData.length; i++) {
         //for each row, check that email is not sent
-        if (Utils.isNull(emailData[i][Constants.getEmailSentStatusColumn()]) || emailData[i][Constants.getEmailSentStatusColumn()] === "No") {
+        if (emailData[i][Constants.getEmailSentStatusColumn()] === "" || emailData[i][Constants.getEmailSentStatusColumn()] === "No") {
             let requestId = emailData[i][0];
             //pick template based on initial check + city response, requestor's email id, subject
             let toEmailAddress = emailData[i][Constants.getEmailRequestorEmailAddressColumnIndex()];
