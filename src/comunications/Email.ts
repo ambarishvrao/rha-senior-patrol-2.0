@@ -34,7 +34,7 @@ function sendEmailsPeriodically(): void {
             let emailSentStatusRangeString: string = SheetUtils.buildRange(Constants.emailSentStatusColumn, currentRowNumber, Constants.emailSentStatusColumn, currentRowNumber);
             console.log("emailSentStatusRangeString= " + emailSentStatusRangeString);
             emailSheet.getRange(emailSentStatusRangeString).setValue("Yes");
-            let emailSentDateRangeString: string = SheetUtils.buildRange(Constants.emailSentStatusColumn, currentRowNumber, Constants.emailSentStatusColumn, currentRowNumber);
+            let emailSentDateRangeString: string = SheetUtils.buildRange(Constants.emailSentDateColumn, currentRowNumber, Constants.emailSentDateColumn, currentRowNumber);
             console.log("emailSentStatusRangeString= " + emailSentDateRangeString);
             emailSheet.getRange(emailSentDateRangeString).setValue(new Date());
             let rowNumberInMasterSheet = RequestUtils.getRowNumberInMasterSheet(Number.parseInt(requestId));
