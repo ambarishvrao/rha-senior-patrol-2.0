@@ -348,7 +348,7 @@ function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spre
             entireRequest[0][Constants.getInitialCheckIndex()],
             entireRequest[0][Constants.getRequestCityStatusColumn()]
         ];
-        addRequestToEmailsTab(emailsSheet, currentCityRequests);
+        addRequestToEmailsTab(emailsSheet, entireRequest[0]);
     }
     if (updatedStatus != "" && RequestUtils.isOpen(updatedStatus)) {
         //set city side request acceptance date if not set already
