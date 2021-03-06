@@ -9,8 +9,8 @@ export class Templates {
      
     Stay Safe :)
      
-    Regards
-    Robin Hood Army`;
+    Regards,
+    Robin Hood Army.`;
 
     public static notPossible: string = `Hi,
  
@@ -21,8 +21,8 @@ export class Templates {
      
     Stay Safe :)
      
-    Regards
-    Robin Hood Army`
+    Regards,
+    Robin Hood Army.`
     public static rejected: string = `Hello! 
  
     We hope you are safe and doing well. Thank you for reaching out to us - we are currently prioritising
@@ -45,6 +45,10 @@ export class Templates {
     Robin Hood Army`;
 
     public static cityRequestNotification: string = `Hi,
-    You have received RHA Senior Patrol 2.0 request(s). Please check the google sheet sent to your city accordingly and 
+    You have received RHA Senior Patrol 2.0 request(s). 
+    Please check the google sheet sent to your city accordingly and acknowledge the same at the earliest!
+
+    Regards,
+    Robin Hood Army.
     `
 }
