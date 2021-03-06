@@ -1,7 +1,7 @@
 export class Templates {
     public static completed: string = `
 Hello!
- 
+
 We hope this update finds you well. We are writing to inform you that our Robins have safely, and successfully fulfilled the #SeniorPatrol request :)
 
 Thank you for entrusting us with this task. Please feel free to reach out to us, should you need any other assistance!
@@ -12,7 +12,7 @@ Regards,
 Robin Hood Army.`;
 
     public static notPossible: string = `
-Hi, 
+Hi,
 We hope you’re well and safe. Thank you for reaching out to us. 
 We regret to inform you that we will not be able to fulfil the #SeniorPatrol request this time.
 We are extremely sorry and hope you understand our limitations.
@@ -24,7 +24,7 @@ Stay Safe :)
 Regards,
 Robin Hood Army.`
     public static rejected: string = `
-Hello! 
+Hello!
 
 We hope you are safe and doing well. 
 Thank you for reaching out to us - we are currently prioritising requests for vaccine inoculation related support for senior citizens living alone.
@@ -47,7 +47,7 @@ Robin Hood Army`;
 
     public static cityRequestNotification: string = `
 Hi,
-You have received RHA Senior Patrol 2.0 request(s). 
+You have received RHA Senior Patrol 2.0 request(s).
 Please check the google sheet sent to your city accordingly and acknowledge the same at the earliest!
 
 Regards,
