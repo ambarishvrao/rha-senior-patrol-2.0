@@ -28,7 +28,7 @@ function sendEmailsPeriodically(): void {
             let cityStatusString = emailData[i][Constants.getEmailCityStatusColumnIndex()];
             let messageBody = getTemplate(initialCheckString, cityStatusString);
             //send mail
-            if (toEmailAddress !== "") {
+            if (toEmailAddress !== "" && toEmailAddress.indexOf("@") > 0 && isValidEmailAddress(toEmailAddress)) {
                 sendEmail(subject, toEmailAddress, messageBody);
             }
             //set final status and request closure date
@@ -48,6 +48,12 @@ function sendEmailsPeriodically(): void {
             requestsSheet.getRange(requestClosureDateRangeString).setValue(new Date());
         }
     }
+}
+
+function isValidEmailAddress(toEmailAddress:string):boolean{
+    let regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    let isValid = regexp.test(toEmailAddress);
+    return isValid;
 }
 
 function sendEmail(subject: string, toEmailAddress: string, message: string) {
