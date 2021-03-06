@@ -48,15 +48,6 @@ function sendEmailsPeriodically(): void {
     }
 }
 
-function sendEmailToCity(): void {
-    let actionSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetActionTabName);
-    //check flag
-    let flag: string = actionSheet.getRange(Constants.sendToCityEmailFlagAddress).getValue();
-    if (flag === "No") {
-        return;
-    }
-}
-
 function sendEmail(subject: string, toEmailAddress: string, message: string) {
     MailApp.sendEmail(toEmailAddress, subject, message);
 }
