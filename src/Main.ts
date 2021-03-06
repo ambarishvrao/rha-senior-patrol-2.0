@@ -8,6 +8,7 @@ import { StringUtils } from "./utils/StringUtils";
 import { RequestUtils } from "./utils/RequestUtils";
 import { CityResponseHolder } from "./models/CityResponseHolder";
 import { FinalStatus } from "./models/FinalStatus";
+import { Templates } from "./comunications/Templates";
 
 function syncRequestsToCities(): void {
     console.log("syncRequestsToCities= " + new Date().toISOString());
@@ -95,6 +96,9 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
     let requestMapHolder: RequestMapHolder = new RequestMapHolder();
     let failedCitySetOfRequestsMap: Map<string, string[][]> = new Map(), successfulCitySetOfRequestsMap: Map<string, string[][]> = new Map();
     let cityUrlsMap: Map<String, String> = getCityUrlsFromMaster();
+    let actionSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetEmailsTabName);
+    let cityEmailsMap: Map<String, String> = getCityEmailsFromMaster(actionSheet);
+    let emailNotificationSubject: string = actionSheet.getRange(Constants.cityEmailNotificationSubjectAddress).getValue();
     citySetOfRequestsMap.forEach((currentCityRequests: string[][], currentCity: string) => {
         if (Utils.isNull(currentCity) || currentCity === "") {
             return;
@@ -117,7 +121,7 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
         //if current id is not present in above array, then we add to the end
         //if current id is present in above array, we do nothing
 
-        // this will not work! need to change logic to force push all requests!
+        // this will work! need to change logic to force push all requests!
         let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, "B");
 
         //get last row + 1 range, and add requests which are accepted, and not sent, set status as "Pending" in city sheet
@@ -132,6 +136,8 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
         console.log("currentCityRequests= " + filteredCurrentCityRequests);
         if (filteredCurrentCityRequests.length > 0) {
             citySpecificSheet.getRange(cityRequestRangeString).setValues(filteredCurrentCityRequests);
+            //send email notification to city
+            sendEmailToCity(emailNotificationSubject, cityEmailsMap.get(currentCity).toString());
         }
         //add city to successfulCitySetOfRequestsMap or failedCitySetOfRequestsMap
         failedCitySetOfRequestsMap.set(currentCity, filteredCurrentCityFailedRequests);
@@ -349,4 +355,32 @@ function captureDateBasedOnStatusTransition(requestsSheet: GoogleAppsScript.Spre
             targetRange.setValue(new Date());
         }
     }
+}
+
+function getCityEmailsFromMaster(emailSheet:GoogleAppsScript.Spreadsheet.Sheet):Map<string, string>{
+    let cityEmailsMap: Map<string, string> = new Map();
+    let sheet: GoogleAppsScript.Spreadsheet.Sheet = SpreadsheetApp.openById(Constants.citySheetMasterId).getSheetByName(Constants.citySheetMasterTabName);
+    let values: string[][] = sheet.getRange(Constants.cityEmailRange).getValues();
+    for (let i: number = 0; i < values.length; i++) {
+        let city: string = values[i][Constants.getCitySheetMasterCityColumn()];
+        let email: string = values[i][Constants.getCitySheetEmailColumnIndex()];
+        if (!Utils.isNull(city) && city !== "") {
+            cityEmailsMap.set(city, email);
+        }
+    }
+    return cityEmailsMap;
+}
+
+function sendEmailToCity(emailNotificationSubject: string, cityEmailId: string): void {
+    let actionSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetActionTabName);
+    //check flag
+    let flag: string = actionSheet.getRange(Constants.sendToCityEmailFlagAddress).getValue();
+    if (flag === "No") {
+        return;
+    }
+    sendEmail(emailNotificationSubject, cityEmailId, Templates.cityRequestNotification);
+}
+
+function sendEmail(subject: string, toEmailAddress: string, message: string) {
+    MailApp.sendEmail(toEmailAddress, subject, message);
 }

@@ -9,6 +9,7 @@ export class Constants {
     public static lastSyncedIdForMasterToCityAddress: string = "I2";
     public static sendToCityEmailFlagAddress: string = "M2";
     public static emailSubjectAddress: string = "M3";
+    public static cityEmailNotificationSubjectAddress: string = "M4";
     public static lastSyncedIdFromCityToMasterAddress: string = "I15";
 
     //Copy Column A as well, as it is reserved for IDs
@@ -41,6 +42,9 @@ export class Constants {
     public static citySheetMasterCityColumn: string = "A";
     public static citySheetMasterSheetUrlColumn: string = "B";
     public static citySheetMasterTabRange: string = "A2:B300";
+    public static cityEmailTabName:string="cities";
+    public static cityEmailRange: string = "A2:C300";
+    public static citySheetEmailColumn: string = "C";
 
     public static sentToCityValue: string = "Sent";
     public static sentToCityNAValue: string = "NA";
@@ -96,6 +100,10 @@ export class Constants {
 
     public static getCitySheetMasterSheetUrlColumn(): number {
         return SheetUtils.getIndexFromAlphabet(Constants.citySheetMasterSheetUrlColumn);
+    }
+
+    public static getCitySheetEmailColumnIndex(): number {
+        return SheetUtils.getIndexFromAlphabet(Constants.citySheetEmailColumn);
     }
     public static getRequestSheetRequestIdColumn(): number {
         return SheetUtils.getIndexFromAlphabet(Constants.requestStartCellColumn);
