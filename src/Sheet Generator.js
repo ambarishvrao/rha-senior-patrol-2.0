@@ -10,9 +10,9 @@ function createCitySheets() {
   SpreadsheetApp.setActiveSpreadsheet(ss);
   //Setting Initial Position in URL Sheet
   var sheet = ss.getSheets()[0];
-  var range = sheet.getRange(1, 1, citylist.length+1,2);
+  var range = sheet.getRange(1, 1, citylist.length + 1, 2);
   //Loop to create sheets, save URLs, Link Data
-  for(var i = 0; i<citylist.length; i++){
+  for (var i = 0; i < citylist.length; i++) {
     var ssName = citylist[i];
     //City wise sheet creation
     var ssNew = SpreadsheetApp.create(ssName + " Senior Patrol 2.0 Request List");
@@ -24,12 +24,12 @@ function createCitySheets() {
     f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.EDIT);
     //Saving URLs in URL Sheet
     //urllist[i]=urllist[i]+"-"+ssNew.getUrl();
-    var cell = range.getCell(i+2, 1);
+    var cell = range.getCell(i + 2, 1);
     cell.setValue(urllist[i]);
-    var cell = range.getCell(i+2, 2);
+    var cell = range.getCell(i + 2, 2);
     var cityURL = ssNew.getUrl();
     var truncIndex = cityURL.search("/edit");
-    cityURL = cityURL.substring(0,truncIndex);
+    cityURL = cityURL.substring(0, truncIndex);
     cell.setValue(cityURL);
 
     //Copying from Template
