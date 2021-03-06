@@ -101,7 +101,11 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
     let emailNotificationSubject: string = actionSheet.getRange(Constants.cityEmailNotificationSubjectAddress).getValue();
     citySetOfRequestsMap.forEach((currentCityRequests: string[][], currentCity: string) => {
         //get city sheet from city master sheet
-        let citySpecificSheetUrl = cityUrlsMap.get(currentCity).toString();
+        let citySheetUrlFromMap = cityUrlsMap.get(currentCity);
+        if (Utils.isNull(citySheetUrlFromMap)) {
+            citySheetUrlFromMap = "";
+        }
+        let citySpecificSheetUrl = citySheetUrlFromMap.toString();
         let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getRequestFinalStatusColumn(), Constants.isSeniorCitizenLivingAloneIndex());
         let filteredCurrentCityRequests: string[][]=[];
         if (currentCity !== "" && citySpecificSheetUrl !== "") {
