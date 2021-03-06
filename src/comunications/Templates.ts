@@ -2,8 +2,7 @@ export class Templates {
     public static completed: string = `
 Hello!
  
-We hope this update finds you well. We are writing to inform you that our Robins have safely, and
-successfully fulfilled the #SeniorPatrol request:) 
+We hope this update finds you well. We are writing to inform you that our Robins have safely, and successfully fulfilled the #SeniorPatrol request :)
 
 Thank you for entrusting us with this task. Please feel free to reach out to us, should you need any other assistance!
 
@@ -14,7 +13,8 @@ Robin Hood Army.`;
 
     public static notPossible: string = `
 Hi, 
-We hope you’re well and safe. Thank you for reaching out to us - we regret to inform you that we will not be able to fulfil the #SeniorPatrol request this time.
+We hope you’re well and safe. Thank you for reaching out to us. 
+We regret to inform you that we will not be able to fulfil the #SeniorPatrol request this time.
 We are extremely sorry and hope you understand our limitations.
 
 Please do let us know if there is anything else we can do for you/them.
