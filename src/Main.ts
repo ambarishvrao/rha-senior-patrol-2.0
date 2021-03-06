@@ -100,44 +100,39 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
     let cityEmailsMap: Map<String, String> = getCityEmailsFromMaster(actionSheet);
     let emailNotificationSubject: string = actionSheet.getRange(Constants.cityEmailNotificationSubjectAddress).getValue();
     citySetOfRequestsMap.forEach((currentCityRequests: string[][], currentCity: string) => {
-        if (Utils.isNull(currentCity) || currentCity === "") {
-            return;
-        }
         //get city sheet from city master sheet
         let citySpecificSheetUrl = cityUrlsMap.get(currentCity).toString();
-        if (Utils.isNull(citySpecificSheetUrl)) {
-            //add current city to failure map
-            failedCitySetOfRequestsMap.set(currentCity, currentCityRequests);
-            return;
-        }
-        let citySpecificSheet: GoogleAppsScript.Spreadsheet.Sheet = SpreadsheetApp.openById(citySpecificSheetUrl).getSheetByName(Constants.citySheetRequestTabName);
-        if (Utils.isNull(citySpecificSheet)) {
-            failedCitySetOfRequestsMap.set(currentCity, currentCityRequests);
-            return;
-        }
-
-        //updated logic?
-        //get ids already present in city sheet
-        //if current id is not present in above array, then we add to the end
-        //if current id is present in above array, we do nothing
-
-        // this will work! need to change logic to force push all requests!
-        let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, "B");
-
-        //get last row + 1 range, and add requests which are accepted, and not sent, set status as "Pending" in city sheet
-
-        let filteredCurrentCityRequests: string[][] = filterCityRequestsForAcceptedAndPending(currentCityRequests, Constants.getInitialCheckIndex(), Constants.initialCheckAcceptedString);
-
-        let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
-        let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
-
         let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getRequestFinalStatusColumn(), Constants.isSeniorCitizenLivingAloneIndex());
-        console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
-        console.log("currentCityRequests= " + filteredCurrentCityRequests);
-        if (filteredCurrentCityRequests.length > 0) {
-            citySpecificSheet.getRange(cityRequestRangeString).setValues(filteredCurrentCityRequests);
-            //send email notification to city
-            sendEmailToCity(emailNotificationSubject, cityEmailsMap.get(currentCity).toString());
+        let filteredCurrentCityRequests: string[][]=[];
+        if (currentCity !== "" && citySpecificSheetUrl !== "") {
+            if (Utils.isNull(citySpecificSheetUrl)) {
+                //add current city to failure map
+                failedCitySetOfRequestsMap.set(currentCity, currentCityRequests);
+                return;
+            }
+            let citySpecificSheet: GoogleAppsScript.Spreadsheet.Sheet = SpreadsheetApp.openById(citySpecificSheetUrl).getSheetByName(Constants.citySheetRequestTabName);
+            if (Utils.isNull(citySpecificSheet)) {
+                failedCitySetOfRequestsMap.set(currentCity, currentCityRequests);
+                return;
+            }
+            let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, "B");
+
+            //get last row + 1 range, and add requests which are accepted, and not sent, set status as "Pending" in city sheet
+
+            filteredCurrentCityRequests = filterCityRequestsForAcceptedAndPending(currentCityRequests, Constants.getInitialCheckIndex(), Constants.initialCheckAcceptedString);
+
+            let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
+            let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
+
+
+            console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
+            console.log("currentCityRequests= " + filteredCurrentCityRequests);
+            if (filteredCurrentCityRequests.length > 0) {
+                citySpecificSheet.getRange(cityRequestRangeString).setValues(filteredCurrentCityRequests);
+                //send email notification to city
+                sendEmailToCity(emailNotificationSubject, cityEmailsMap.get(currentCity).toString());
+            }
+            
         }
         //add city to successfulCitySetOfRequestsMap or failedCitySetOfRequestsMap
         failedCitySetOfRequestsMap.set(currentCity, filteredCurrentCityFailedRequests);

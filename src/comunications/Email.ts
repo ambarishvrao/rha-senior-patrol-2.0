@@ -28,7 +28,9 @@ function sendEmailsPeriodically(): void {
             let cityStatusString = emailData[i][Constants.getEmailCityStatusColumnIndex()];
             let messageBody = getTemplate(initialCheckString, cityStatusString);
             //send mail
-            sendEmail(subject, toEmailAddress, messageBody);
+            if (toEmailAddress !== "") {
+                sendEmail(subject, toEmailAddress, messageBody);
+            }
             //set final status and request closure date
             let currentRowNumber: number = i + 2;
             let emailSentStatusRangeString: string = SheetUtils.buildRange(Constants.emailSentStatusColumn, currentRowNumber, Constants.emailSentStatusColumn, currentRowNumber);
