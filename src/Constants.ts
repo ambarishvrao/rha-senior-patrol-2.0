@@ -30,6 +30,7 @@ export class Constants {
     public static requestFinalStatusColumn: string = "U";
     public static requestCityAcceptanceDateColumn: string = "X";
     public static requestorNameColumn: string = "D";
+    public static isSeniorCitizenLivingAloneColumn:string="F";
     //closure from city side
     public static requestCityClosureDateColumn: string = "Y";
 
@@ -135,5 +136,9 @@ export class Constants {
 
     public static getEmailCityStatusColumnIndex(): number {
         return SheetUtils.getIndexFromAlphabet(Constants.emailRequestCityStatusColumn);
+    }
+
+    public static isSeniorCitizenLivingAloneIndex(): number {
+        return SheetUtils.getIndexFromAlphabet(Constants.isSeniorCitizenLivingAloneColumn);
     }
 }

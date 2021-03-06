@@ -131,7 +131,7 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
         let startRowInCitySpecificSheet: number = lastRowInSheet + 1, endRowInCitySpecificSheet = startRowInCitySpecificSheet + filteredCurrentCityRequests.length - 1;
         let cityRequestRangeString = SheetUtils.buildRange(Constants.citySheetStartCellColumn, startRowInCitySpecificSheet, Constants.citySheetEndCellColumn, endRowInCitySpecificSheet);
 
-        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getRequestFinalStatusColumn());
+        let filteredCurrentCityFailedRequests: string[][] = filterInitialCheckFailedRequests(currentCityRequests, Constants.getInitialCheckIndex(), Constants.getRequestFinalStatusColumn(), Constants.isSeniorCitizenLivingAloneIndex());
         console.log("city= " + currentCity + " cityRequestRangeString= " + cityRequestRangeString);
         console.log("currentCityRequests= " + filteredCurrentCityRequests);
         if (filteredCurrentCityRequests.length > 0) {
@@ -183,10 +183,10 @@ function filterCityRequestsForAcceptedAndPending(inputArray: string[][], firstIn
     return outputArray;
 }
 
-function filterInitialCheckFailedRequests(inputArray: string[][], index: number, finalStatusIndex): string[][] {
+function filterInitialCheckFailedRequests(inputArray: string[][], index: number, finalStatusIndex, seniorCitizenAloneIndex): string[][] {
     let outputArray: string[][] = [];
     for (let i: number = 0; i < inputArray.length; i++) {
-        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "" && inputArray[i][finalStatusIndex] !== FinalStatus.closed) {
+        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "" && inputArray[i][finalStatusIndex] !== FinalStatus.closed && !RequestUtils.isSeniorCitizenAlone(inputArray[i][seniorCitizenAloneIndex])) {
             outputArray.push(inputArray[i]);
         }
     }

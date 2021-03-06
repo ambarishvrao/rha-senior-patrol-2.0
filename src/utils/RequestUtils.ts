@@ -29,6 +29,13 @@ export class RequestUtils {
         return false;
     }
 
+    public static isSeniorCitizenAlone(seniorCitizenAloneString: string): boolean {
+        if (seniorCitizenAloneString==="Yes") {
+            return true;
+        }
+        return false;
+    }
+
     public static isInitialCheckFailed(initialCheckString:string):boolean{
         if (this.requestInitialCheckFailedStatuses.filter(a => a === initialCheckString).length > 0) {
             return true;

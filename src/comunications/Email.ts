@@ -53,7 +53,8 @@ function sendEmail(subject: string, toEmailAddress: string, message: string) {
 }
 
 function getTemplate(initialCheckString: string, cityResponseString: string): string {
-    if (initialCheckString === InitialCheckRequestStatus.rejected) {
+    //empty initial check string means that senior citizen is not living alone
+    if (initialCheckString === InitialCheckRequestStatus.rejected || initialCheckString === "") {
         return Templates.rejected;
     }
     if (initialCheckString === InitialCheckRequestStatus.incompleteInformation) {
