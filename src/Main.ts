@@ -96,7 +96,7 @@ function copyRequestsToCitySheets(citySetOfRequestsMap: Map<string, string[][]>)
     let requestMapHolder: RequestMapHolder = new RequestMapHolder();
     let failedCitySetOfRequestsMap: Map<string, string[][]> = new Map(), successfulCitySetOfRequestsMap: Map<string, string[][]> = new Map();
     let cityUrlsMap: Map<String, String> = getCityUrlsFromMaster();
-    let actionSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetEmailsTabName);
+    let actionSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetActionTabName);
     let cityEmailsMap: Map<String, String> = getCityEmailsFromMaster(actionSheet);
     let emailNotificationSubject: string = actionSheet.getRange(Constants.cityEmailNotificationSubjectAddress).getValue();
     citySetOfRequestsMap.forEach((currentCityRequests: string[][], currentCity: string) => {
