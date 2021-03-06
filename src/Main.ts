@@ -185,7 +185,7 @@ function filterCityRequestsForAcceptedAndPending(inputArray: string[][], firstIn
 function filterInitialCheckFailedRequests(inputArray: string[][], index: number, finalStatusIndex, seniorCitizenAloneIndex): string[][] {
     let outputArray: string[][] = [];
     for (let i: number = 0; i < inputArray.length; i++) {
-        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && inputArray[i][index] !== "" && inputArray[i][finalStatusIndex] !== FinalStatus.closed && !RequestUtils.isSeniorCitizenAlone(inputArray[i][seniorCitizenAloneIndex])) {
+        if (RequestUtils.isInitialCheckFailed(inputArray[i][index]) && (inputArray[i][index] !== "" || !RequestUtils.isSeniorCitizenAlone(inputArray[i][seniorCitizenAloneIndex])) && inputArray[i][finalStatusIndex] !== FinalStatus.closed) {
             outputArray.push(inputArray[i]);
         }
     }
