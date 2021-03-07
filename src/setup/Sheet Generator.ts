@@ -11,9 +11,9 @@ function createCitySheets() {
   let citiesList = seniorPatrolOptInSheet.getRange(citiesRangeString).getValues();
   let citylist=[];
   for(let i:number=0;i<citiesList.length;i++){
-    console.log("city= " + citiesList[i][0]);
     citylist.push(citiesList[i][0]);
   }
+  console.log("cityList= " + citylist);
   //City List
   citylist = ["Agartala"];
   //Initializing City URL List
@@ -22,7 +22,7 @@ function createCitySheets() {
   var urlSheetId = "1u_786Au1bLu_XtwrqVwNhgCbqSgaNNKF-saxaCZKvK0";
   //Setting URL Sheet as active
   let cityMasterSheet = SpreadsheetApp.openById(urlSheetId);
-  SpreadsheetApp.setActiveSpreadsheet(ss);
+  SpreadsheetApp.setActiveSpreadsheet(cityMasterSheet);
   //Setting Initial Position in URL Sheet
   var sheet = cityMasterSheet.getSheets()[0];
   let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(sheet, "A");
