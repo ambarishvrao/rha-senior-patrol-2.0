@@ -68,25 +68,29 @@ function createCitySheets() {
     sheet = ss.getSheetByName('Sheet1');
     ss.deleteSheet(sheet);
     sheet = ss.getSheetByName('Copy of Requests');
-
-    
+    SpreadsheetApp.getActiveSpreadsheet().renameActiveSheet("Requests");
     for (var i = 0; i < protections.length; i++) {
-      var p = protections[i];
-      var rangeNotation = p.getRange().getA1Notation();
-      var p2 = sheet.getRange(rangeNotation).protect();
-      p2.setDescription(p.getDescription());
-      p2.setWarningOnly(p.isWarningOnly());
-      if (!p.isWarningOnly()) {
-        p2.removeEditors(p2.getEditors());
-        let users: GoogleAppsScript.Base.User[] = p.getEditors();
-        let editorEmailAddresses: string[] = [];
-        for (let j: number = 0; j < users.length; j++) {
-          editorEmailAddresses.push(users[i].getEmail());
+      try {
+        var p = protections[i];
+        var rangeNotation = p.getRange().getA1Notation();
+        var p2 = sheet.getRange(rangeNotation).protect();
+        p2.setDescription(p.getDescription());
+        p2.setWarningOnly(p.isWarningOnly());
+        if (!p.isWarningOnly()) {
+          p2.removeEditors(p2.getEditors());
+          let users: GoogleAppsScript.Base.User[] = p.getEditors();
+          let editorEmailAddresses: string[] = [];
+          for (let j: number = 0; j < users.length; j++) {
+            editorEmailAddresses.push(users[i].getEmail());
+          }
+          p2.addEditors(editorEmailAddresses);
+          // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
         }
-        p2.addEditors(editorEmailAddresses);
-        // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
+      } catch(e: unknown) {
+        console.log("error while setting permission", e);
+        console.error("error while setting permission", e);
       }
     }
-    SpreadsheetApp.getActiveSpreadsheet().renameActiveSheet("Requests");
+
   }
 }
