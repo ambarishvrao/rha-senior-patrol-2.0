@@ -9,8 +9,8 @@ function createCitySheets() {
   let citiesRangeString = SheetUtils.buildRange(Constants.seniorPatrolOptedCitiesColumn, startRow, Constants.seniorPatrolOptedCitiesColumn, endRow);
   console.log("citiesRangeString= " + citiesRangeString);
   let citiesList = seniorPatrolOptInSheet.getRange(citiesRangeString).getValues();
-  let citylist=[];
-  for(let i:number=0;i<citiesList.length;i++){
+  let citylist = [];
+  for (let i: number = 0; i < citiesList.length; i++) {
     citylist.push(citiesList[i][0]);
   }
   console.log("cityList= " + citylist);
@@ -26,7 +26,7 @@ function createCitySheets() {
   //Setting Initial Position in URL Sheet
   var sheet = cityMasterSheet.getSheets()[0];
   let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(sheet, "A");
-  var range = sheet.getRange(lastRowInSheet+1, 1, citylist.length + 1, 2);
+  var range = sheet.getRange(lastRowInSheet + 1, 1, citylist.length + 1, 2);
   //Loop to create sheets, save URLs, Link Data
   for (var i = 0; i < citylist.length; i++) {
     var ssName = citylist[i];
@@ -40,7 +40,7 @@ function createCitySheets() {
     f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.EDIT);
     //Saving URLs in URL Sheet
     //urllist[i]=urllist[i]+"-"+ssNew.getUrl();
-    let currentRowNumber:number=i+1;
+    let currentRowNumber: number = i + 1;
     var cell = range.getCell(currentRowNumber, 1);
     cell.setValue(urllist[i]);
     var cell = range.getCell(currentRowNumber, 2);
@@ -58,7 +58,7 @@ function createCitySheets() {
     SpreadsheetApp.setActiveSpreadsheet(templateSheet);
     var source = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = source.getSheets()[0];
-
+    var protections = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE);
     var destination = SpreadsheetApp.openById(newssid);
     sheet.copyTo(destination);
 
@@ -68,6 +68,25 @@ function createCitySheets() {
     sheet = ss.getSheetByName('Sheet1');
     ss.deleteSheet(sheet);
     sheet = ss.getSheetByName('Copy of Requests');
+
+    
+    for (var i = 0; i < protections.length; i++) {
+      var p = protections[i];
+      var rangeNotation = p.getRange().getA1Notation();
+      var p2 = sheet.getRange(rangeNotation).protect();
+      p2.setDescription(p.getDescription());
+      p2.setWarningOnly(p.isWarningOnly());
+      if (!p.isWarningOnly()) {
+        p2.removeEditors(p2.getEditors());
+        let users: GoogleAppsScript.Base.User[] = p.getEditors();
+        let editorEmailAddresses: string[] = [];
+        for (let j: number = 0; j < users.length; j++) {
+          editorEmailAddresses.push(users[i].getEmail());
+        }
+        p2.addEditors(editorEmailAddresses);
+        // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
+      }
+    }
     SpreadsheetApp.getActiveSpreadsheet().renameActiveSheet("Requests");
   }
 }
