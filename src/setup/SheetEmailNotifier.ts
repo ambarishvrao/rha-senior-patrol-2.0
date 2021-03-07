@@ -10,10 +10,10 @@ function sendEmailsAboutSeniorPatrolSheet() {
     var ss = SpreadsheetApp.openById(urlSheetId);
     SpreadsheetApp.setActiveSpreadsheet(ss);
     var sheet = SpreadsheetApp.getActiveSheet();
-    var startRow = 1; // First row of data to process
+    var startRow = 2; // First row of data to process
     var numRows = 0; // Number of rows to process
     let lastRowNumber = SheetUtils.getLastNonEmptyRowForColumn(sheet, "A");
-    var dataRange = sheet.getRange(startRow, 1, lastRowNumber, 4);
+    var dataRange = sheet.getRange(startRow, 1, (lastRowNumber - startRow) + 1, 4);
     // Fetch values for each row in the Range.
     var data = dataRange.getValues();
     for (var i = 0; i < data.length; ++i) {
