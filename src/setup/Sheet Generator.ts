@@ -1,16 +1,32 @@
+import { Constants } from "../Constants";
+import { SheetUtils } from "../utils/SheetUtils";
+
 function createCitySheets() {
+
+  let seniorPatrolOptInSheet = SpreadsheetApp.openById(Constants.seniorPatrolOptedCitiesSheetId).getSheetByName(Constants.seniorPatrolOptedCitiesTabName);
+  let startRow: number = 1, endRow = 1;
+  endRow = SheetUtils.getLastNonEmptyRowForColumn(seniorPatrolOptInSheet, Constants.seniorPatrolOptedCitiesColumn);
+  let citiesRangeString = SheetUtils.buildRange(Constants.seniorPatrolOptedCitiesColumn, startRow, Constants.seniorPatrolOptedCitiesColumn, endRow);
+  console.log("citiesRangeString= " + citiesRangeString);
+  let citiesList = seniorPatrolOptInSheet.getRange(citiesRangeString).getValues();
+  let citylist=[];
+  for(let i:number=0;i<citiesList.length;i++){
+    console.log("city= " + citiesList[i][0]);
+    citylist.push(citiesList[i][0]);
+  }
   //City List
-  var citylist = ["Delhi"];
+  citylist = ["Agartala"];
   //Initializing City URL List
   var urllist = citylist;
   //ID of Sheet where City Sheet URLs will be stored
   var urlSheetId = "1u_786Au1bLu_XtwrqVwNhgCbqSgaNNKF-saxaCZKvK0";
   //Setting URL Sheet as active
-  var ss = SpreadsheetApp.openById(urlSheetId);
+  let cityMasterSheet = SpreadsheetApp.openById(urlSheetId);
   SpreadsheetApp.setActiveSpreadsheet(ss);
   //Setting Initial Position in URL Sheet
-  var sheet = ss.getSheets()[0];
-  var range = sheet.getRange(1, 1, citylist.length + 1, 2);
+  var sheet = cityMasterSheet.getSheets()[0];
+  let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(sheet, "A");
+  var range = sheet.getRange(lastRowInSheet+1, 1, citylist.length + 1, 2);
   //Loop to create sheets, save URLs, Link Data
   for (var i = 0; i < citylist.length; i++) {
     var ssName = citylist[i];
@@ -24,9 +40,10 @@ function createCitySheets() {
     f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.EDIT);
     //Saving URLs in URL Sheet
     //urllist[i]=urllist[i]+"-"+ssNew.getUrl();
-    var cell = range.getCell(i + 2, 1);
+    let currentRowNumber:number=i+2;
+    var cell = range.getCell(currentRowNumber, 1);
     cell.setValue(urllist[i]);
-    var cell = range.getCell(i + 2, 2);
+    var cell = range.getCell(currentRowNumber, 2);
     var cityURL = ssNew.getUrl();
     var truncIndex = cityURL.search("/edit");
     cityURL = cityURL.substring(0, truncIndex);

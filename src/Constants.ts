@@ -71,6 +71,10 @@ export class Constants {
     public static cityBirdsEyeViewTabName: string = "Consolidated Data";
     public static cityBirdsEyeViewRange: string = "A3:C300";
 
+    public static seniorPatrolOptedCitiesSheetId: string = "1WlAa5vXyNesUN6PJMlRV5hpq-AbM2zfqyFq-NBrOi40";
+    public static seniorPatrolOptedCitiesTabName: string = "Opt In";
+    public static seniorPatrolOptedCitiesColumn: string = "A";
+
     public static getCityIndex(): number {
         return SheetUtils.getIndexFromAlphabet(Constants.requestCityColumn);
     }
