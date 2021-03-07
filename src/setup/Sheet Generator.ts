@@ -40,7 +40,7 @@ function createCitySheets() {
     f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.EDIT);
     //Saving URLs in URL Sheet
     //urllist[i]=urllist[i]+"-"+ssNew.getUrl();
-    let currentRowNumber:number=i+2;
+    let currentRowNumber:number=i+1;
     var cell = range.getCell(currentRowNumber, 1);
     cell.setValue(urllist[i]);
     var cell = range.getCell(currentRowNumber, 2);
