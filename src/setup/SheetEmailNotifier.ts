@@ -18,13 +18,13 @@ function sendEmailsAboutSeniorPatrolSheet() {
     var data = dataRange.getValues();
     for (var i = 0; i < data.length; ++i) {
         var row = data[i];
-        var emailAddress = row[2]; // Column "C"
-        var message = new String(Templates.citySheetNotification);
-        message = message.replace("{{CITY}}", row[0]); //Column A
-        message = message.replace("{{CITY}}", row[0]); //Column A
-        message = message.replace("{{LINK}}", row[1]);//Column B
         var emailSent = row[3]; // Fourth column
         if (emailSent !== EMAIL_SENT) { // Prevents sending duplicates
+            var emailAddress = row[2]; // Column "C"
+            var message = new String(Templates.citySheetNotification);
+            message = message.replace("{{CITY}}", row[0]); //Column A
+            message = message.replace("{{CITY}}", row[0]); //Column A
+            message = message.replace("{{LINK}}", row[1]);//Column B
             var subject = '#SeniorPatrol City Requests Sheet';
             MailApp.sendEmail(emailAddress, subject, message.toString());
             sheet.getRange(startRow + i, 4).setValue(EMAIL_SENT);
