@@ -21,6 +21,7 @@ function sendEmailsAboutSeniorPatrolSheet() {
         var emailAddress = row[2]; // Column "C"
         var message = new String(Templates.citySheetNotification);
         message = message.replace("{{CITY}}", row[0]); //Column A
+        message = message.replace("{{CITY}}", row[0]); //Column A
         message = message.replace("{{LINK}}", row[1]);//Column B
         var emailSent = row[3]; // Fourth column
         if (emailSent !== EMAIL_SENT) { // Prevents sending duplicates
