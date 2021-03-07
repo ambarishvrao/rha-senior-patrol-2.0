@@ -1,8 +1,9 @@
+import { Templates } from "../comunications/Templates";
 import { Constants } from "../Constants";
 
-let EMAIL_SENT = 'EMAIL_SENT';
+let EMAIL_SENT = 'Yes';
 
-function sendEmails2() {
+function sendEmailsAboutSeniorPatrolSheet() {
     var urlSheetId = Constants.citySheetMasterId;
     //Setting URL Sheet as active
     var ss = SpreadsheetApp.openById(urlSheetId);
@@ -11,18 +12,20 @@ function sendEmails2() {
     var startRow = 1; // First row of data to process
     var numRows = 0; // Number of rows to process
     // Fetch the range of cells A2:B3
-    var dataRange = sheet.getRange(startRow, 1, numRows, 3);
+    var dataRange = sheet.getRange(startRow, 1, numRows, 4);
     // Fetch values for each row in the Range.
     var data = dataRange.getValues();
     for (var i = 0; i < data.length; ++i) {
         var row = data[i];
-        var emailAddress = row[0]; // First column
-        var message = row[1]; // Second column
-        var emailSent = row[2]; // Third column
+        var emailAddress = row[2]; // Column "C"
+        var message = new String(Templates.citySheetNotification);
+        message = message.replace("{{CITY}}", row[0]); //Column A
+        message = message.replace("{{LINK}}", row[1]);//Column B
+        var emailSent = row[3]; // Fourth column
         if (emailSent !== EMAIL_SENT) { // Prevents sending duplicates
             var subject = '#SeniorPatrol City Requests Sheet';
-            MailApp.sendEmail(emailAddress, subject, message);
-            sheet.getRange(startRow + i, 3).setValue(EMAIL_SENT);
+            MailApp.sendEmail(emailAddress, subject, message.toString());
+            sheet.getRange(startRow + i, 4).setValue(EMAIL_SENT);
             // Make sure the cell is updated right away in case the script is interrupted
             SpreadsheetApp.flush();
         }

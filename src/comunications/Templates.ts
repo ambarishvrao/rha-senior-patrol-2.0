@@ -53,4 +53,17 @@ Please check the google sheet sent to your city accordingly and acknowledge the 
 Regards,
 Robin Hood Army.
 `;
+
+    public static citySheetNotification: string = `
+Hello RHA {{CITY}},
+
+Click on the link below to view #SeniorPatrol Requests for your city.
+All requests for {{CITY}} will be updated here. Please make sure to update the "City Status" and "contacted" columns.
+
+{{LINK}}
+
+Happy serving!
+
+Cheers,
+Robin Hood Army`;
 }
