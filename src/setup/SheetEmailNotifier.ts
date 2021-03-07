@@ -28,6 +28,7 @@ function sendEmailsAboutSeniorPatrolSheet() {
             sheet.getRange(startRow + i, 4).setValue(EMAIL_SENT);
             // Make sure the cell is updated right away in case the script is interrupted
             SpreadsheetApp.flush();
+            console.log("Notified " + emailAddress + " successfully");
         }
     }
 }
