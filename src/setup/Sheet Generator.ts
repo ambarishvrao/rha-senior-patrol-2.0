@@ -128,7 +128,7 @@ function createCitySheets() {
           let editorEmailAddresses: string[] = [];
           if(users!==undefined && users!==null && users.length>0){
             for (let j: number = 0; j < users.length; j++) {
-              editorEmailAddresses.push(users[k].getEmail());
+              editorEmailAddresses.push(users[j].getEmail());
             }
             p2.addEditors(editorEmailAddresses);
             // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
