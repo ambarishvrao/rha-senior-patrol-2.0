@@ -40,8 +40,6 @@ function sendEmailsAboutSeniorPatrolSheet() {
 }
 
 function cleanupEmailIds(raw: string): string {
-    raw = raw.replace(". ", ",");
-    raw = raw.replace("/ ", ",");
     var emails = raw.split(',');
     var valid = true;
     var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
