@@ -153,7 +153,7 @@ function setProtectedRanges(): void {
   var protections = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE);
   var citySheetMasterId = "1u_786Au1bLu_XtwrqVwNhgCbqSgaNNKF-saxaCZKvK0";
   //Setting URL Sheet as active
-  let cityMasterSheet = SpreadsheetApp.openById(citySheetMasterId);
+  let cityMasterSheet = SpreadsheetApp.openByUrl(citySheetMasterId);
   SpreadsheetApp.setActiveSpreadsheet(cityMasterSheet);
   var cityMasterCurrentSheet = cityMasterSheet.getSheets()[0];
   let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(cityMasterCurrentSheet, "A");
