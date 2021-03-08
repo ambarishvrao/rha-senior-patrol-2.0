@@ -69,9 +69,9 @@ function createCitySheets() {
     ss.deleteSheet(sheet);
     sheet = ss.getSheetByName('Copy of Requests');
     SpreadsheetApp.getActiveSpreadsheet().renameActiveSheet("Requests");
-    for (var i = 0; i < protections.length; i++) {
+    for (var k = 0; k < protections.length; k++) {
       try {
-        var p = protections[i];
+        var p = protections[k];
         var rangeNotation = p.getRange().getA1Notation();
         var p2 = sheet.getRange(rangeNotation).protect();
         p2.setDescription(p.getDescription());
@@ -82,7 +82,7 @@ function createCitySheets() {
           let editorEmailAddresses: string[] = [];
           if(users!==undefined && users!==null && users.length>0){
             for (let j: number = 0; j < users.length; j++) {
-              editorEmailAddresses.push(users[i].getEmail());
+              editorEmailAddresses.push(users[k].getEmail());
             }
             p2.addEditors(editorEmailAddresses);
             // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
