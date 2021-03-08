@@ -20,7 +20,7 @@ export class Constants {
     public static requestStartCellColumn: string = "A";
     public static requestTimestampColumn: string = "B";
     public static requestStartCellRow: number = 2;
-    public static requestorEmailAddressColumn: string = "B";
+    public static requestorEmailAddressColumn: string = "C";
     public static requestCityColumn: string = "K";
     public static requestEndCellColumn: string = "P";
     public static requestInitialCheckColumn: string = "Q";
