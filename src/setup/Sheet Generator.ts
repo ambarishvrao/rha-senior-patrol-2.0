@@ -166,6 +166,13 @@ function setProtectedRanges(): void {
       try {
         var p = protections[k];
         var rangeNotation = p.getRange().getA1Notation();
+        var destinationProtections=destinationSheetTab.getProtections(SpreadsheetApp.ProtectionType.RANGE);
+        for (var iterator = 0; iterator < destinationProtections.length; iterator++) {
+          var currentProtection = destinationProtections[iterator];
+          if (currentProtection.canEdit()) {
+            currentProtection.remove();
+          }
+        }
         var p2 = destinationSheetTab.getRange(rangeNotation).protect();
         p2.setDescription(p.getDescription());
         p2.setWarningOnly(p.isWarningOnly());
