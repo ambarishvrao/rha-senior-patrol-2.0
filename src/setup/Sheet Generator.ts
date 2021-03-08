@@ -156,7 +156,7 @@ function setProtectedRanges(): void {
   let cityMasterSheet = SpreadsheetApp.openById(citySheetMasterId);
   SpreadsheetApp.setActiveSpreadsheet(cityMasterSheet);
   var cityMasterCurrentSheet = cityMasterSheet.getSheets()[0];
-  let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(sheet, "A");
+  let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(cityMasterCurrentSheet, "A");
   var citySheetDataRangeString = "A2:P" + lastRowInSheet.toString();
   let citySheetData: string[][] = cityMasterCurrentSheet.getRange(citySheetDataRangeString).getValues()
   for (let i = 0; i < citySheetData.length; i++) {
