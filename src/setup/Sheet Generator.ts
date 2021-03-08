@@ -4,7 +4,7 @@ import { SheetUtils } from "../utils/SheetUtils";
 function createCitySheets() {
 
   let seniorPatrolOptInSheet = SpreadsheetApp.openById(Constants.seniorPatrolOptedCitiesSheetId).getSheetByName(Constants.seniorPatrolOptedCitiesTabName);
-  let startRow: number = 1, endRow = 1;
+  let startRow: number = 2, endRow = 1;
   endRow = SheetUtils.getLastNonEmptyRowForColumn(seniorPatrolOptInSheet, Constants.seniorPatrolOptedCitiesColumn);
   let citiesRangeString = SheetUtils.buildRange(Constants.seniorPatrolOptedCitiesColumn, startRow, Constants.seniorPatrolOptedCitiesColumn, endRow);
   console.log("citiesRangeString= " + citiesRangeString);
@@ -15,7 +15,7 @@ function createCitySheets() {
   }
   console.log("cityList= " + citylist);
   //City List
-  citylist = ["Agartala"];
+  //citylist = ["Agartala"];
   //Initializing City URL List
   var urllist = citylist;
   //ID of Sheet where City Sheet URLs will be stored
