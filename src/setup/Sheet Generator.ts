@@ -160,7 +160,7 @@ function setProtectedRanges(): void {
   var citySheetDataRangeString = "A2:P" + lastRowInSheet.toString();
   let citySheetData: string[][] = cityMasterCurrentSheet.getRange(citySheetDataRangeString).getValues()
   for (let i = 0; i < citySheetData.length; i++) {
-    let destinationSheet = SpreadsheetApp.openByUrl(citySheetData[i][1]);
+    let destinationSheet = SpreadsheetApp.openById(citySheetData[i][1].replace("https://docs.google.com/spreadsheets/d/", ""));
     let destinationSheetTab = destinationSheet.getSheetByName("Requests");
     for (var k = 0; k < protections.length; k++) {
       try {
