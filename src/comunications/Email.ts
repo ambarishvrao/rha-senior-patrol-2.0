@@ -34,18 +34,19 @@ function sendEmailsPeriodically(): void {
             //set final status and request closure date
             let currentRowNumber: number = i + 2;
             let emailSentStatusRangeString: string = SheetUtils.buildRange(Constants.emailSentStatusColumn, currentRowNumber, Constants.emailSentStatusColumn, currentRowNumber);
-            console.log("emailSentStatusRangeString= " + emailSentStatusRangeString);
+            //console.log("emailSentStatusRangeString= " + emailSentStatusRangeString);
             emailSheet.getRange(emailSentStatusRangeString).setValue("Yes");
             let emailSentDateRangeString: string = SheetUtils.buildRange(Constants.emailSentDateColumn, currentRowNumber, Constants.emailSentDateColumn, currentRowNumber);
-            console.log("emailSentStatusRangeString= " + emailSentDateRangeString);
+            //console.log("emailSentStatusRangeString= " + emailSentDateRangeString);
             emailSheet.getRange(emailSentDateRangeString).setValue(new Date());
             let rowNumberInMasterSheet = RequestUtils.getRowNumberInMasterSheet(Number.parseInt(requestId));
             let requestClosureDateRangeString: string = SheetUtils.buildRange(Constants.requestClosureDateColumn, rowNumberInMasterSheet, Constants.requestClosureDateColumn, rowNumberInMasterSheet);
-            console.log("requestClosureDateRangeString= " + requestClosureDateRangeString);
+            //console.log("requestClosureDateRangeString= " + requestClosureDateRangeString);
             let requestClosureStatusRangeString: string = SheetUtils.buildRange(Constants.requestFinalStatusColumn, rowNumberInMasterSheet, Constants.requestFinalStatusColumn, rowNumberInMasterSheet);
-            console.log("requestClosureStatusRangeString= " + requestClosureStatusRangeString);
+            //console.log("requestClosureStatusRangeString= " + requestClosureStatusRangeString);
             requestsSheet.getRange(requestClosureStatusRangeString).setValue("Closed");
             requestsSheet.getRange(requestClosureDateRangeString).setValue(new Date());
+            console.log("Request id= " + requestId + " sent email successfully to " + toEmailAddress);
         }
     }
 }
