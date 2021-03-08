@@ -126,7 +126,7 @@ function createCitySheets() {
           p2.removeEditors(p2.getEditors());
           let users: GoogleAppsScript.Base.User[] = p.getEditors();
           let editorEmailAddresses: string[] = [];
-          if(users!==undefined && users!==null && users.length>0){
+          if (users !== undefined && users !== null && users.length > 0) {
             for (let j: number = 0; j < users.length; j++) {
               editorEmailAddresses.push(users[j].getEmail());
             }
@@ -134,11 +134,57 @@ function createCitySheets() {
             // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
           }
         }
-      } catch(e: unknown) {
+      } catch (e: unknown) {
         console.log("error while setting permission", e);
         console.error("error while setting permission", e);
       }
     }
 
+  }
+}
+
+function setProtectedRanges(): void {
+  var templateId = "1AE4rUw21oGlDOclEgMcfAcLu2wSfx1VfT7m1INOXcKM";
+  //Setting Template Sheet as active
+  var templateSheet = SpreadsheetApp.openById(templateId);
+  SpreadsheetApp.setActiveSpreadsheet(templateSheet);
+  var source = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = source.getSheets()[0];
+  var protections = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE);
+  var citySheetMasterId = "1u_786Au1bLu_XtwrqVwNhgCbqSgaNNKF-saxaCZKvK0";
+  //Setting URL Sheet as active
+  let cityMasterSheet = SpreadsheetApp.openById(citySheetMasterId);
+  SpreadsheetApp.setActiveSpreadsheet(cityMasterSheet);
+  var cityMasterCurrentSheet = cityMasterSheet.getSheets()[0];
+  let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(sheet, "A");
+  var citySheetDataRangeString = "A2:P" + lastRowInSheet.toString();
+  let citySheetData: string[][] = cityMasterCurrentSheet.getRange(citySheetDataRangeString).getValues()
+  for (let i = 0; i < citySheetData.length; i++) {
+    let destinationSheet = SpreadsheetApp.openById(citySheetData[i][1]);
+    let destinationSheetTab = destinationSheet.getSheetByName("Requests");
+    for (var k = 0; k < protections.length; k++) {
+      try {
+        var p = protections[k];
+        var rangeNotation = p.getRange().getA1Notation();
+        var p2 = destinationSheetTab.getRange(rangeNotation).protect();
+        p2.setDescription(p.getDescription());
+        p2.setWarningOnly(p.isWarningOnly());
+        if (!p.isWarningOnly()) {
+          p2.removeEditors(p2.getEditors());
+          let users: GoogleAppsScript.Base.User[] = p.getEditors();
+          let editorEmailAddresses: string[] = [];
+          if (users !== undefined && users !== null && users.length > 0) {
+            for (let j: number = 0; j < users.length; j++) {
+              editorEmailAddresses.push(users[j].getEmail());
+            }
+            p2.addEditors(editorEmailAddresses);
+            // p2.setDomainEdit(p.canDomainEdit()); //  only if using an Apps domain 
+          }
+        }
+      } catch (e: unknown) {
+        console.log("error while setting permission", e);
+        console.error("error while setting permission", e);
+      }
+    }
   }
 }
