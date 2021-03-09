@@ -162,9 +162,13 @@ function changeColumnNames(): void {
   var citySheetDataRangeString = "A2:P" + lastRowInSheet.toString();
   let citySheetData: string[][] = cityMasterCurrentSheet.getRange(citySheetDataRangeString).getValues()
   for (let i = 0; i < citySheetData.length; i++) {
-    let destinationSheet = SpreadsheetApp.openById(citySheetData[i][1].replace("https://docs.google.com/spreadsheets/d/", ""));
-    let destinationSheetTab = destinationSheet.getSheetByName("Requests");
-    destinationSheetTab.getRange("Q1").setValue("City Request Status");
-    console.log("Changed column for " + citySheetData[i][0]);
+    try{
+      let destinationSheet = SpreadsheetApp.openById(citySheetData[i][1].replace("https://docs.google.com/spreadsheets/d/", ""));
+      let destinationSheetTab = destinationSheet.getSheetByName("Requests");
+      destinationSheetTab.getRange("Q1").setValue("City Request Status");
+      console.log("Changed column for " + citySheetData[i][0]);
+    }catch(e:unknown){
+      console.error("Failed column for " + citySheetData[i][0]);
+    }
   }
 }
