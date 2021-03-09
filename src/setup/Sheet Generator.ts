@@ -165,5 +165,6 @@ function changeColumnNames(): void {
     let destinationSheet = SpreadsheetApp.openById(citySheetData[i][1].replace("https://docs.google.com/spreadsheets/d/", ""));
     let destinationSheetTab = destinationSheet.getSheetByName("Requests");
     destinationSheetTab.getRange("Q1").setValue("City Request Status");
+    console.log("Changed column for " + citySheetData[i][0]);
   }
 }
