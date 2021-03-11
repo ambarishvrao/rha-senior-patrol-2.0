@@ -93,7 +93,7 @@ function createCitySheets() {
         console.error("error while setting permission", e);
       }
     }
-
+    console.log("Created sheet successfully for " + ssName);
   }
 }
 
