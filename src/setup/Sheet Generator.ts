@@ -15,9 +15,7 @@ function createCitySheets() {
   }
   console.log("cityList= " + citylist);
   //City List
-  citylist = ["Bhuj", "Gandhidham", "Aurangabad",
-    "Bhavnagar", "Botad", "Gondia", "Kolhapur", "Lonavala",
-    "Navsari", "Osmanabad", "Radhanpur", "Vadodara"];
+  citylist = ["Saharanpur", "Bhagalpur"];
   //Initializing City URL List
   var urllist = citylist;
   //ID of Sheet where City Sheet URLs will be stored
