@@ -15,7 +15,7 @@ function createCitySheets() {
   }
   console.log("cityList= " + citylist);
   //City List
-  citylist = ["Gwalior"];
+  citylist = ["Jammu"];
   //Initializing City URL List
   var urllist = citylist;
   //ID of Sheet where City Sheet URLs will be stored
