@@ -78,4 +78,17 @@ export class Utils {
     public static getJsonObject(map: any) {
         return JSON.stringify(map);
     }
+
+    public static arrayContainsValue(array: any[][], columnIndex: number, valueToBeFound: number): boolean {
+        if (Utils.isNull(array) || array.length === 0) {
+            return false;
+        }
+        let found: boolean = false;
+        for (let i: number = 0; i < array.length; i++) {
+            if (array[i][columnIndex] === valueToBeFound) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
