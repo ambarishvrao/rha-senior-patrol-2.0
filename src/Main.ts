@@ -228,25 +228,6 @@ function addRequestToEmailsTab(emailsSheet: GoogleAppsScript.Spreadsheet.Sheet, 
     }
     let idToReturn = Number.parseInt(currentCityRequest[0]);
     let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(emailsSheet, "B");
-    let rowNumberToAddCurrentRequest = lastRowInSheet + 1;
-    let requestEmailData: string[] = [currentCityRequest[0], currentCityRequest[Constants.getRequestorNameIndex()],currentCityRequest[Constants.getRequestorEmailAddressIndex()], currentCityRequest[Constants.getInitialCheckIndex()], currentCityRequest[Constants.getRequestCityStatusColumn()]];
-    let valuesToSetToSheet: string[][] = [];
-    valuesToSetToSheet.push(requestEmailData);
-    let cityResponseRangeString: string = SheetUtils.buildRange(Constants.emailRequestIdColumn, rowNumberToAddCurrentRequest, Constants.emailRequestCityStatusColumn, rowNumberToAddCurrentRequest);
-    console.log("sentToCityRangeString= " + cityResponseRangeString + " valueToBeSet= " + valuesToSetToSheet);
-    emailsSheet.getRange(cityResponseRangeString).setValues(valuesToSetToSheet);
-    return idToReturn;
-}
-
-
-function addRequestToEmailsTabTestingOnly(emailsSheet: GoogleAppsScript.Spreadsheet.Sheet, currentCityRequest: string[]): number {
-    emailsSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetEmailsTabName);
-    currentCityRequest = ["20", ""];
-    if (Utils.isNull(currentCityRequest)) {
-        return 0;
-    }
-    let idToReturn = Number.parseInt(currentCityRequest[0]);
-    let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(emailsSheet, "B");
     let existingRequestIdsQueuedForSendingEmailRange=SheetUtils.buildRange(Constants.emailRequestIdColumn,1,Constants.emailRequestIdColumn,lastRowInSheet)
     let existingRequestIdsQueuedForSendingEmail = emailsSheet.getRange(existingRequestIdsQueuedForSendingEmailRange).getValues();
     //if id is already present in the sheet, don't add it again
