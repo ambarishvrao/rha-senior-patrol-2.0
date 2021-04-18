@@ -346,9 +346,9 @@ function syncRequestStatusesFromCitiesTestingForTentativeClosureDateOnly(): void
     let lastRowNumber: number = SheetUtils.getLastNonEmptyRowForColumn(requestsSheet, Constants.requestTimestampColumn);
     //form vertical arrays for requestId, sentToCity, cityResponse
     let requestIds: string[][] = [["848"]];
-    let cities: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestCityColumn, 848, Constants.requestCityColumn, 848)).getValues();
-    let sentToCityStatuses: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestSentToCityColumn, 848, Constants.requestSentToCityColumn, 848)).getValues();
-    let cityResponses: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestCityStatusColumn, 848, Constants.requestCityStatusColumn, 848)).getValues();
+    let cities: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestCityColumn, 849, Constants.requestCityColumn, 849)).getValues();
+    let sentToCityStatuses: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestSentToCityColumn, 849, Constants.requestSentToCityColumn, 849)).getValues();
+    let cityResponses: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestCityStatusColumn, 849, Constants.requestCityStatusColumn, 849)).getValues();
     let requestsToCheckForStatusUpdates: Set<number> = new Set();
     let cityRequestIdMap: Map<string, Set<number>> = new Map();
     //iterating over id array, find open requests, group array into a map with key: city value: set of request ids
