@@ -296,99 +296,13 @@ function syncRequestStatusesFromCitiesPeriodically(): void {
                 //build range
                 let cityRequestStatusRangeString = SheetUtils.buildRange(Constants.citySheetRequestStatusColumn, rowNumber, Constants.citySheetRequestStatusColumn, rowNumber);
                 let cityRequestContactedRangeString = SheetUtils.buildRange(Constants.citySheetRequestContactedColumn, rowNumber, Constants.citySheetRequestContactedColumn, rowNumber);
-                //pull status
-                let requestStatus: string = citySpecificSheet.getRange(cityRequestStatusRangeString).getValue();
-                let requestContacted: string = citySpecificSheet.getRange(cityRequestContactedRangeString).getValue();
-                if (!cityRequestStatusMap.has(currentCity)) {
-                    cityRequestStatusMap.set(currentCity, new Map());
-                }
-                let existingCityRequestStatusMap: Map<number, CityResponseHolder> = cityRequestStatusMap.get(currentCity);
-                if (Utils.isNull(existingCityRequestStatusMap)) {
-                    existingCityRequestStatusMap = new Map();
-                }
-                let cityResponseHolder: CityResponseHolder = new CityResponseHolder(requestStatus, requestContacted, null);
-                existingCityRequestStatusMap.set(requestId, cityResponseHolder);
-                cityRequestStatusMap.set(currentCity, existingCityRequestStatusMap);
-            }
-        });
-    });
-    console.log("cityRequestStatusMap= " + cityRequestStatusMap);
-    cityRequestStatusMap.forEach((currentCityRequestStatuses: Map<number, CityResponseHolder>, city: string) => {
-
-        currentCityRequestStatuses.forEach((cityResponseHolder: CityResponseHolder, requestId: number) => {
-            //figure out which row has the current requestId
-            let rowNumber = RequestUtils.getRowNumberInMasterSheet(requestId);
-            //build range
-            let cityRequestStatusRangeString = SheetUtils.buildRange(Constants.requestCityStatusColumn, rowNumber, Constants.requestCityStatusColumn, rowNumber);
-            let cityRequestContactedRangeString = SheetUtils.buildRange(Constants.requestCityContactedColumn, rowNumber, Constants.requestCityContactedColumn, rowNumber);
-            let cityRequestTentativeClosureDateRangeString = SheetUtils.buildRange(Constants.requestTentativeClosureDateColumn, rowNumber, Constants.requestTentativeClosureDateColumn, rowNumber);
-
-            let existingStatus: string = requestsSheet.getRange(cityRequestStatusRangeString).getValue();
-
-            requestsSheet.getRange(cityRequestContactedRangeString).setValue(cityResponseHolder.wasContacted);
-            requestsSheet.getRange(cityRequestTentativeClosureDateRangeString).setValue(cityResponseHolder.tentativeClosureDate);
-
-            if (existingStatus !== cityResponseHolder.cityResponse) {
-                console.log("UPDATED! requestId= " + requestId + " updatedStatus= " + cityResponseHolder.cityResponse);
-                requestsSheet.getRange(cityRequestStatusRangeString).setValue(cityResponseHolder.cityResponse);
-                captureDateBasedOnStatusTransition(requestsSheet, rowNumber, existingStatus, cityResponseHolder.cityResponse, emailSheet);
-            } else {
-                console.log("SAME STATUS! requestId= " + requestId + " updatedStatus= " + cityResponseHolder.cityResponse);
-            }
-        });
-    });
-}
-
-function syncRequestStatusesFromCitiesTestingForTentativeClosureDateOnly(): void {
-    //get last requestId in the "requests" sheet
-    let requestsSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetTabName);
-    let emailSheet = SpreadsheetApp.getActive().getSheetByName(Constants.requestSheetEmailsTabName);
-    let lastRowNumber: number = SheetUtils.getLastNonEmptyRowForColumn(requestsSheet, Constants.requestTimestampColumn);
-    //form vertical arrays for requestId, sentToCity, cityResponse
-    let requestIds: string[][] = [["848"]];
-    let cities: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestCityColumn, 849, Constants.requestCityColumn, 849)).getValues();
-    let sentToCityStatuses: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestSentToCityColumn, 849, Constants.requestSentToCityColumn, 849)).getValues();
-    let cityResponses: string[][] = requestsSheet.getRange(SheetUtils.buildRange(Constants.requestCityStatusColumn, 849, Constants.requestCityStatusColumn, 849)).getValues();
-    let requestsToCheckForStatusUpdates: Set<number> = new Set();
-    let cityRequestIdMap: Map<string, Set<number>> = new Map();
-    //iterating over id array, find open requests, group array into a map with key: city value: set of request ids
-    for (let i: number = 0; i < requestIds.length; i++) {
-        if (StringUtils.isNotBlank(requestIds[i][0].toString())) {
-            if (StringUtils.isNotBlank(sentToCityStatuses[i][0].toString()) && RequestUtils.isRequestSentToCity(sentToCityStatuses[i][0].toString()) && RequestUtils.isOpen(cityResponses[i][0].toString())) {
-                let currentCity: string = cities[i][0].toString();
-                if (!cityRequestIdMap.has(currentCity)) {
-                    cityRequestIdMap.set(currentCity, new Set());
-                }
-                let existingSet: Set<number> = cityRequestIdMap.get(currentCity);
-                existingSet.add(Number.parseInt(requestIds[i][0].toString()))
-                cityRequestIdMap.set(currentCity, existingSet);
-            }
-        }
-    }
-    console.log("cityRequestIdMap= " + Utils.getJsonObject(cityRequestIdMap));
-    //iterate over each key in map, fetch latest status from city sheet, and set in master if it has changed. set changed date based on certain status transitions.
-    let citySheetUrlsMap: Map<String, String> = getCityUrlsFromMaster();
-    let cityRequestStatusMap: Map<string, Map<number, CityResponseHolder>> = new Map();
-    cityRequestIdMap.forEach((setOfRequestIdsForCity: Set<number>, currentCity: string) => {
-        let citySpecificSheetUrl = citySheetUrlsMap.get(currentCity).toString();
-        let citySpecificSheet: GoogleAppsScript.Spreadsheet.Sheet = SpreadsheetApp.openById(citySpecificSheetUrl).getSheetByName(Constants.citySheetRequestTabName);
-        setOfRequestIdsForCity.forEach((requestId: number) => {
-            //get last row in city sheet
-            let lastRowNumber = SheetUtils.getLastNonEmptyRowForColumn(citySpecificSheet, Constants.requestStartCellColumn);
-            //get ids array from city specific sheet
-            let citySpecificIdsRangeString = SheetUtils.buildRange(Constants.requestStartCellColumn, Constants.requestStartCellRow, Constants.requestStartCellColumn, lastRowNumber);
-            let citySpecificIds: string[][] = citySpecificSheet.getRange(citySpecificIdsRangeString).getValues();
-            //figure out which row has the current requestId
-            let rowNumber = figureOutRowNumberForGivenRequestId(citySpecificIds, requestId);
-            if (rowNumber !== -1) {
-                //build range
-                let cityRequestStatusRangeString = SheetUtils.buildRange(Constants.citySheetRequestStatusColumn, rowNumber, Constants.citySheetRequestStatusColumn, rowNumber);
-                let cityRequestContactedRangeString = SheetUtils.buildRange(Constants.citySheetRequestContactedColumn, rowNumber, Constants.citySheetRequestContactedColumn, rowNumber);
-                let cityRequestTentativeClosureDateRangeString = SheetUtils.buildRange(Constants.citySheetRequestTentativeClosureDateColumn, rowNumber, Constants.citySheetRequestTentativeClosureDateColumn, rowNumber);
+                let cityRequestTentativeClosureDateRangeString = SheetUtils.buildRange(Constants.requestTentativeClosureDateColumn, rowNumber, Constants.requestTentativeClosureDateColumn, rowNumber);
+                
                 //pull status
                 let requestStatus: string = citySpecificSheet.getRange(cityRequestStatusRangeString).getValue();
                 let requestContacted: string = citySpecificSheet.getRange(cityRequestContactedRangeString).getValue();
                 let requestTentativeClosingDate: Date = citySpecificSheet.getRange(cityRequestTentativeClosureDateRangeString).getValue();
+
                 if (!cityRequestStatusMap.has(currentCity)) {
                     cityRequestStatusMap.set(currentCity, new Map());
                 }
