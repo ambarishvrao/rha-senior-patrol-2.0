@@ -170,3 +170,24 @@ function changeColumnNames(): void {
     }
   }
 }
+
+function addTentativeClosureDateColumnToAllSheets(): void {
+  var citySheetMasterId = "1u_786Au1bLu_XtwrqVwNhgCbqSgaNNKF-saxaCZKvK0";
+  //Setting URL Sheet as active
+  let cityMasterSheet = SpreadsheetApp.openById(citySheetMasterId);
+  SpreadsheetApp.setActiveSpreadsheet(cityMasterSheet);
+  var cityMasterCurrentSheet = cityMasterSheet.getSheets()[0];
+  let lastRowInSheet: number = SheetUtils.getLastNonEmptyRowForColumn(cityMasterCurrentSheet, "A");
+  var citySheetDataRangeString = "A2:P" + lastRowInSheet.toString();
+  let citySheetData: string[][] = cityMasterCurrentSheet.getRange(citySheetDataRangeString).getValues()
+  for (let i = 0; i < citySheetData.length; i++) {
+    try {
+      let destinationSheet = SpreadsheetApp.openById(citySheetData[i][1].replace("https://docs.google.com/spreadsheets/d/", ""));
+      let destinationSheetTab = destinationSheet.getSheetByName("Requests");
+      destinationSheetTab.getRange("S1").setValue("Tentative Closure Date");
+      console.log("Added column for " + citySheetData[i][0]);
+    } catch (e: unknown) {
+      console.error("Failed column for " + citySheetData[i][0]);
+    }
+  }
+}
