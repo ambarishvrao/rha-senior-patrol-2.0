@@ -37,7 +37,7 @@ export class Constants {
     //closure from Senior patrol side, as we might have emails etc to send
     public static requestClosureDateColumn: string = "Z";
     public static requestClosureStatusColumn: string = "Z";
-    public static requestTentativeClosureDateColumn: string = "AB";
+    public static requestTentativeClosureDateColumn: string = "AC";
 
     public static citySheetMasterId: string = "1u_786Au1bLu_XtwrqVwNhgCbqSgaNNKF-saxaCZKvK0";
     public static citySheetMasterTabName: string = "Sheet1";
