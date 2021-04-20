@@ -296,7 +296,7 @@ function syncRequestStatusesFromCitiesPeriodically(): void {
                 //build range
                 let cityRequestStatusRangeString = SheetUtils.buildRange(Constants.citySheetRequestStatusColumn, rowNumber, Constants.citySheetRequestStatusColumn, rowNumber);
                 let cityRequestContactedRangeString = SheetUtils.buildRange(Constants.citySheetRequestContactedColumn, rowNumber, Constants.citySheetRequestContactedColumn, rowNumber);
-                let cityRequestTentativeClosureDateRangeString = SheetUtils.buildRange(Constants.requestTentativeClosureDateColumn, rowNumber, Constants.requestTentativeClosureDateColumn, rowNumber);
+                let cityRequestTentativeClosureDateRangeString = SheetUtils.buildRange(Constants.citySheetRequestTentativeClosureDateColumn, rowNumber, Constants.citySheetRequestTentativeClosureDateColumn, rowNumber);
                 
                 //pull status
                 let requestStatus: string = citySpecificSheet.getRange(cityRequestStatusRangeString).getValue();
